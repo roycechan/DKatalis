@@ -2,8 +2,6 @@ import pandas as pd
 from datetime import date
 import numpy as np
 import numpy_financial as npf
-import matplotlib.pyplot as plt
-import matplotlib
 
 
 def get_amortization_table(interest_rate, years, payments_year, principal, addl_principal=0, start_date=date.today()):

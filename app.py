@@ -9,7 +9,10 @@ server = Flask(__name__)
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(server=server, external_stylesheets=external_stylesheets)
 
+# ------------------------------------------------------------------------------
 # -- Import and clean data (importing csv into pandas)
+# ------------------------------------------------------------------------------
+
 df = pd.read_csv("data/LuxuryLoanPortfolio.csv")
 
 # Boxplot dataframe
@@ -28,6 +31,7 @@ df_net_interest_income = df_net_interest_income.groupby(["Year", "Purpose"])['In
 
 # ------------------------------------------------------------------------------
 # App layout
+# ------------------------------------------------------------------------------
 
 app.layout = html.Div(children=[
     html.Div([
@@ -130,7 +134,7 @@ app.layout = html.Div(children=[
 
 # ------------------------------------------------------------------------------
 # Connect the Plotly graphs with Dash Components
-
+# ------------------------------------------------------------------------------
 
 @app.callback(
     Output("graph", "figure"),
