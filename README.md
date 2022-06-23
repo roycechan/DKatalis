@@ -1,8 +1,8 @@
 # DKatalis Task 2
 ## Folder Structure
 ```
-+-- app
-|   +-- app.py            // source code of dashboatd application
++-- src
+|   +-- app.py            // source code of dashboard application
 |   +-- helpers.py        // helper functions to generate loan amortisation schedules 
 |   +-- requirements.txt  // libraries
 +-- csvs                  // folder containing .csv files found in retail-banking-demo-data
