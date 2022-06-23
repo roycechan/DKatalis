@@ -14,6 +14,7 @@ app = dash.Dash(server=server, external_stylesheets=external_stylesheets)
 # ------------------------------------------------------------------------------
 
 df = pd.read_csv("./LuxuryLoanPortfolio.csv")
+# df = pd.read_csv("../csvs/LuxuryLoanPortfolio.csv")
 
 # Boxplot dataframe
 df_boxplot = df.copy()
@@ -25,8 +26,13 @@ df_boxplot = df_boxplot.loc[(df_boxplot["loan_id"] != "LL0000608")]
 # Loan Amortization dataframe
 df_loan = df.copy()
 
+df_loan_stats = df.copy()
+loan_stats_columns = ['loan_id', 'firstname', 'lastname', 'phone', 'title', 'purpose', 'funded_date', 'funded_amount', 'duration_years', 'interest_rate', ]
+df_loan_stats = df_loan_stats[loan_stats_columns]
+
 # NII dataframe
 df_net_interest_income = pd.read_csv("./net_interest_income.csv")
+# df_net_interest_income = pd.read_csv("../csvs/net_interest_income.csv")
 df_net_interest_income = df_net_interest_income.groupby(["Year", "Purpose"])['Interest'].sum().reset_index()
 
 # ------------------------------------------------------------------------------
@@ -88,22 +94,24 @@ app.layout = html.Div(children=[
                     style={'width': "40%", "padding-left": "10px"},
                     placeholder="Select a loan id",
                     ),
-                html.Br(),
-            dash_table.DataTable(
-                id="dt1",
-                style_header={
-                    'backgroundColor': 'rgb(30, 30, 30)',
-                    'color': 'white',
-                    'fontWeight': 'bold',
-                    'textAlign': 'center'
-                },
-                style_data={
-                    'backgroundColor': 'rgb(50, 50, 50)',
-                    'color': 'white',
-                     'textAlign': 'center'
-                },
-            ),
-            dcc.Graph(id="graph2"),
+        html.Br(),
+        dash_table.DataTable(
+            id="dt1",
+            data=df_loan_stats.to_dict("records"),
+            columns=[{'id': c, 'name': c} for c in loan_stats_columns],
+            style_header={
+                'backgroundColor': 'rgb(30, 30, 30)',
+                'color': 'white',
+                'fontWeight': 'bold',
+                'textAlign': 'center'
+            },
+            style_data={
+                'backgroundColor': 'rgb(50, 50, 50)',
+                'color': 'white',
+                 'textAlign': 'center'
+            },
+        ),
+        dcc.Graph(id="graph2"),
     ], className='row'),
     html.Div([
             html.H4("3. Net Interest Income Schedule", style={'text-align': 'center'}),
@@ -139,13 +147,13 @@ app.layout = html.Div(children=[
 
 @app.callback(
     Output("graph", "figure"),
+    Output("dt1", "data"),
     Output("graph2", "figure"),
-    Output("dt1", "csvs"),
     Output("graph3", "figure"),
-    Input("x-axis", "value"),
+    [Input("x-axis", "value"),
     Input("y-axis", "value"),
     Input("selected_loan_id", "value"),
-    Input("selected_loan_purpose", "value"),
+    Input("selected_loan_purpose", "value")]
 )
 def generate_charts(x, y, loan_id, loan_purpose):
     # 1. Box Plot
@@ -175,10 +183,8 @@ def generate_charts(x, y, loan_id, loan_purpose):
     fig2.update_traces(texttemplate="%{y:$,.0f}")
 
     # 2.2. Loan Statistics
-    df_loan_stats = df_loan.loc[df_loan.loan_id == loan_id, ['firstname', 'lastname', 'phone', 'title', 'purpose', 'funded_date', 'funded_amount', 'duration_years', 'interest_rate', ]]
-    df_loan_stats = df_loan_stats.to_dict('records')
-    # print(df_loan_stats)
-
+    filtered_df = df_loan_stats[df_loan_stats.loan_id == loan_id]
+    print(filtered_df.to_dict('records'))
     # 3. Net Interest Income
     df_net_interest_income_final = df_net_interest_income[df_net_interest_income["Purpose"].isin(loan_purpose)]
     fig3 = px.area(df_net_interest_income_final,
@@ -188,11 +194,11 @@ def generate_charts(x, y, loan_id, loan_purpose):
                    )
     fig3.update_traces(texttemplate="%{y:$,.0f}")
 
-    return fig1, fig2, df_loan_stats, fig3
+    return fig1, filtered_df.to_dict('records'), fig2, fig3
 
 
 # ------------------------------------------------------------------------------
 if __name__ == '__main__':
-    app.run_server(host='0.0.0.0', port=5000, debug=True)
+    app.run_server(host='0.0.0.0', port=5000, debug=False)
     # src.run_server(debug=True)
 
