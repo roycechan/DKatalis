@@ -16,8 +16,7 @@
 ## Getting Started
 ### Build and run container
 ```
-docker-compose build
-docker-compose up
+docker-compose up --build
 ```
 ### View dashboard
 Navigate to [127.0.0.1:5000](http://127.0.0.1:5000).
