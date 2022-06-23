@@ -1,9 +1,9 @@
 import pandas as pd
 import dash
 import plotly.express as px  # (version 4.7.0 or higher)
-from dash import Dash, dcc, html, Input, Output, dash_table  # pip install dash (version 2.0.0 or higher)
-from app import helpers
+from dash import dcc, html, Input, Output, dash_table  # pip install dash (version 2.0.0 or higher)
 from flask import Flask
+import helpers
 
 server = Flask(__name__)
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
@@ -13,7 +13,7 @@ app = dash.Dash(server=server, external_stylesheets=external_stylesheets)
 # -- Import and clean csvs (importing csv into pandas)
 # ------------------------------------------------------------------------------
 
-df = pd.read_csv("../csvs/LuxuryLoanPortfolio.csv")
+df = pd.read_csv("./LuxuryLoanPortfolio.csv")
 
 # Boxplot dataframe
 df_boxplot = df.copy()
@@ -26,7 +26,7 @@ df_boxplot = df_boxplot.loc[(df_boxplot["loan_id"] != "LL0000608")]
 df_loan = df.copy()
 
 # NII dataframe
-df_net_interest_income = pd.read_csv("../csvs/net_interest_income.csv")
+df_net_interest_income = pd.read_csv("./net_interest_income.csv")
 df_net_interest_income = df_net_interest_income.groupby(["Year", "Purpose"])['Interest'].sum().reset_index()
 
 # ------------------------------------------------------------------------------
@@ -194,4 +194,5 @@ def generate_charts(x, y, loan_id, loan_purpose):
 # ------------------------------------------------------------------------------
 if __name__ == '__main__':
     app.run_server(host='0.0.0.0', port=5000, debug=True)
+    # src.run_server(debug=True)
 
