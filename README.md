@@ -1,8 +1,8 @@
 # DKatalis Task 2
 ## Folder Structure
 ```
-+-- app
-|   +-- app.py            // source code of dashboatd application
++-- src
+|   +-- app.py            // source code of dashboard application
 |   +-- helpers.py        // helper functions to generate loan amortisation schedules 
 |   +-- requirements.txt  // libraries
 +-- csvs                  // folder containing .csv files found in retail-banking-demo-data
@@ -14,10 +14,10 @@
 +-- docker-compose.yaml   // build instructions
 ```
 ## Getting Started
-### Build and run container
+### Run container
 ```
-docker-compose build
-docker-compose up
+$ docker-compose build
+$ docker-compose up
 ```
 ### View dashboard
 Navigate to [127.0.0.1:5000](http://127.0.0.1:5000).
