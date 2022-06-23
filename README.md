@@ -14,7 +14,7 @@
 +-- docker-compose.yaml   // build instructions
 ```
 ## Getting Started
-### Build and run container
+### Run container
 ```
 docker-compose up
 ```
